@@ -1,7 +1,5 @@
 module.exports = (app) => {
-    const express = require("express");
     const mongoose = require("mongoose");
-    const { exec } = require("child_process");
     const router = require("express").Router();
     const marketplaceItem = require("../controllers/marketplaceItem.controller.js");
 
@@ -19,24 +17,7 @@ module.exports = (app) => {
     // Scan the marketplace for changes in item prices
     // Using python script that will be run as a child process
     // Gets data through the ubisoft API
-    router.get("/scanMarket", async (req, res) => {
-        exec("python3 ../scripts/scanMarket.py", (error, stdout, stderr) => {
-            if (error) {
-                console.log(`error: ${error.message}`);
-                return;
-            }
-            if (stderr) {
-                console.log(`stderr: ${stderr}`);
-                return;
-            }
-            console.log(`stdout: ${stdout}`);
-        });
-        res.status(200).send("Market scanned successfully");
-
-
-    });
-
-
+    router.get("/scanMarket", marketplaceItem.scanMarket);
 
 
     app.use("/market", router);

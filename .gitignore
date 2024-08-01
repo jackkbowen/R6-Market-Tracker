@@ -1,5 +1,6 @@
-# Ignore environment configuration file
+# Ignore environment configuration file and login credentials
 backend/config.env
+backend/creds/
 
 # Ignore node_modules directories
 frontend/node_modules/

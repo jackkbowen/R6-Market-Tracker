@@ -1,6 +1,9 @@
 const Items = require('../models/marketplaceItem.model');
 const asyncHandler = require('express-async-handler');
 const mongoose = require('mongoose');
+const { fs } = require('fs');
+const { exec } = require("child_process");
+
 
 exports.newItem = asyncHandler(async (req, res) => {
 
@@ -30,5 +33,43 @@ exports.newItem = asyncHandler(async (req, res) => {
         res.status(500).send({
             message: err.message || "An error occurred while creating the item."
         });
+    });
+});
+
+exports.scanMarket = asyncHandler(async (req, res) => {
+    const dataFile = '../backend/app/scripts/assets/data.json';
+    // Check if the data file exists
+    console.log(dataFile);
+    /*
+    fs.readFile(dataFile, 'utf8', (err, data) => {
+        if (err) {
+            if (err.code === 'ENOENT') {
+                // Create an empty data file if it doesn't exist
+                fs.writeFile(dataFile, JSON.stringify({}));
+
+                fs.readFile(dataFile, 'utf8', (err, data) => {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).send({ message: "Error reading data file." });
+                    }
+                });
+            }
+        }
+        console.log(data);
+    });
+    */
+
+
+    exec("python3 ../backend/app/scripts/scanMarket.py", (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            res.status(500).send({ message: "Error executing script" });
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            res.status(500).send({ message: "Script execution error" });
+        }
+        console.log(`stdout: ${stdout}`);
+        res.status(200).send({ message: "Market scan started."});
     });
 });
