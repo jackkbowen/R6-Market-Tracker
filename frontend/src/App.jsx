@@ -10,18 +10,21 @@ function App() {
   const [count, setCount] = useState(0)
   
   return (
-
-  <BrowserRouter>
-  <NavBar/>
-  <div className = "pt-20">
-    <Routes>
-      <Route path="/">
-        <Route index />
-        <Route path="login" />
-      </Route>
-    </Routes>
-  </div>
+  
+  <React.StrictMode>
+    <BrowserRouter>
+        <NavBar/>
+        <div className = "pt-20">
+            <Routes>
+            <Route path="/">
+                <Route index />
+                <Route path="login" />
+            </Route>
+            </Routes>
+        </div>
   </BrowserRouter>
+  </React.StrictMode>
+  
     
   );
 
