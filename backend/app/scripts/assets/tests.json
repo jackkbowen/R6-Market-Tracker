@@ -1,0 +1,97 @@
+{
+    "8c4b685c-c5b5-4fcc-9011-d927d769cca3": {
+      "name": "WICKED RECKONING",
+      "type": "WeaponAttachmentSkinSet",
+      "tags": [
+        "Pattern",
+        "Seasonal",
+        "Y8S2",
+        "sku_china",
+        "sku_ww",
+        "type_weaponattachmentskinset_seasonal",
+        "rarity_superrare"
+      ],
+      "asset_url": "https://ubiservices.cdn.ubi.com/0d2ae42d-4c27-4cb7-af6c-2099062302bb/DeployerAssetsJune2023/f7bf44da_d706_6160_8018_19fcab6dc7eb.png",
+      "sold": [
+        [
+          400,
+          1722538850.0610936
+        ],
+        [
+          300,
+          1722539742.5803223
+        ]
+      ],
+      "data": [
+        120,
+        245,
+        72,
+        310,
+        55556,
+        148
+      ]
+    }, 
+    "7636a2cf-b53e-45d5-90e5-441c42442d90": {
+    "name": "CHROMA STREAKS",
+    "type": "WeaponAttachmentSkinSet",
+    "tags": [
+      "Color",
+      "Universal",
+      "Y5S3",
+      "sku_china",
+      "sku_ww",
+      "type_weaponattachmentskinset_universal",
+      "rarity_superrare",
+      "bp_acquired"
+    ],
+    "asset_url": "https://ubiservices.cdn.ubi.com/0d2ae42d-4c27-4cb7-af6c-2099062302bb/DeployerAssetsJune2023/60c9169b_e5ba_4c31_92c4_75507ee4ccc8.png",
+    "sold": [
+      [
+        5000,
+        1722538850.5048332
+      ]
+    ],
+    "data": [
+      120,
+      4787,
+      3407,
+      4800,
+      150000,
+      1126
+    ]
+  },
+  "34c6f416-3404-4925-a5d6-33686b88e6c3": {
+    "name": "CHROMA STREAKS",
+    "type": "WeaponSkin",
+    "tags": [
+      "Seasonal",
+      "Texture",
+      "Y5S3",
+      "sku_china",
+      "sku_ww",
+      "type_weapon_skins_universal",
+      "type_weaponskin_seasonal",
+      "rarity_superrare",
+      "bp_acquired"
+    ],
+    "asset_url": "https://ubiservices.cdn.ubi.com/0d2ae42d-4c27-4cb7-af6c-2099062302bb/DeployerAssetsJune2023/8f49e6c0_a5da_ad28_b0ad_2db08572b824.png",
+    "sold": [
+      [
+        600,
+        1722538850.9706123
+      ],
+      [
+        570,
+        1722539743.4605317
+      ]
+    ],
+    "data": [
+      120,
+      470,
+      285,
+      600,
+      150000,
+      498
+    ]
+  }
+}
