@@ -1,8 +1,10 @@
 const Items = require('../models/marketplaceItem.model');
 const asyncHandler = require('express-async-handler');
 const mongoose = require('mongoose');
-const { fs } = require('fs');
+const fs = require('fs');
+const fsp = fs.promises;
 const { exec } = require("child_process");
+const path = require('path');
 
 
 exports.newItem = asyncHandler(async (req, res) => {
@@ -37,28 +39,19 @@ exports.newItem = asyncHandler(async (req, res) => {
 });
 
 exports.scanMarket = asyncHandler(async (req, res) => {
-    const dataFile = '../backend/app/scripts/assets/data.json';
+    const dataFile = path.join(__dirname, "../scripts/assets/data.json");
+    
     // Check if the data file exists
-    console.log(dataFile);
+    //await checkForDataFile(dataFile);
+
     /*
-    fs.readFile(dataFile, 'utf8', (err, data) => {
-        if (err) {
-            if (err.code === 'ENOENT') {
-                // Create an empty data file if it doesn't exist
-                fs.writeFile(dataFile, JSON.stringify({}));
-
-                fs.readFile(dataFile, 'utf8', (err, data) => {
-                    if (err) {
-                        console.log(err);
-                        res.status(500).send({ message: "Error reading data file." });
-                    }
-                });
-            }
+    fs.writeFile(dataFile, JSON.stringify({}), (writeErr) => {
+        if (writeErr) {
+            console.error(writeErr);
         }
-        console.log(data);
-    });
-    */
+    }); 
 
+    */
 
     exec("python3 ../backend/app/scripts/scanMarket.py", (error, stdout, stderr) => {
         if (error) {
@@ -73,3 +66,17 @@ exports.scanMarket = asyncHandler(async (req, res) => {
         res.status(200).send({ message: "Market scan started."});
     });
 });
+
+async function checkForDataFile(dataFile) {
+    
+    fs.readFile(dataFile, (err, data) => {
+        if (err) {
+            // Create an empty data file if it doesn't exist
+            fs.writeFile(dataFile, JSON.stringify({}), (writeErr) => {
+                if (writeErr) {
+                    console.error(writeErr);
+                }
+            }); 
+        }
+    });
+}

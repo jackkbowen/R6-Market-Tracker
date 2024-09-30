@@ -18,9 +18,11 @@ function NavBar() {
           <span aria-hidden="true"></span>
         </a>     
       </div>
-      <div class="navbar-menu">
-        <div class="navbar-start">
-          <a class="navbar-item" href="">Home</a>
+      <div class="navbar-menu is-active">
+        <div class="navbar-end">
+          <div class="navbar-item" href="">
+            Home
+          </div>
           <a class="navbar-item" href="">About</a>
           <a class="navbar-item" href="">Contact</a>
         </div>
