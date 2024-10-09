@@ -34,7 +34,7 @@ names_list = df_market['name']
 # 34c6f416-3404-4925-a5d6-33686b88e6c3      CHROMA STREAKS
 
 print (df_market)
-
+'''
 # Connect to MongoDB 
 client = MongoClient('mongodb://localhost:27017/')  # Replace with your MongoDB connection string
 
@@ -46,3 +46,4 @@ collection = db['marketplaceItems']
 # Work on this on future TODO
 
 collection.insert_many(df_market.to_dict('records'))
+'''
