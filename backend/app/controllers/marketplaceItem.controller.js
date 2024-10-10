@@ -53,7 +53,7 @@ exports.scanMarket = asyncHandler(async (req, res) => {
 
     */
 
-    exec("python3 ../backend/app/scripts/scanMarket.py", (error, stdout, stderr) => {
+    exec("python ../backend/app/scripts/scanMarket.py", (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
             res.status(500).send({ message: "Error executing script" });

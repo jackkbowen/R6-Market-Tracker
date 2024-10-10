@@ -11,7 +11,7 @@ import json
 # asset_url string
 # sold list[price, time]
 # data list[minBuyer, maxBuyer, numBuyers, minSeller, maxSeller, numSellers]
-with open('assets/tests.json', 'r') as dataFile:
+with open('assets/data.json', 'r') as dataFile:
     data = json.load(dataFile)
 
 df = pd.DataFrame.from_dict(data)
@@ -28,12 +28,14 @@ df_market = df.T
 # Extracting all the names and their ID
 # addiing .tolist() removes the ids
 names_list = df_market['name']
+sold_list = df_market['sold']
 # Output
 # 8c4b685c-c5b5-4fcc-9011-d927d769cca3    WICKED RECKONING
 # 7636a2cf-b53e-45d5-90e5-441c42442d90      CHROMA STREAKS
 # 34c6f416-3404-4925-a5d6-33686b88e6c3      CHROMA STREAKS
 
-print (df_market)
+print (names_list)
+
 '''
 # Connect to MongoDB 
 client = MongoClient('mongodb://localhost:27017/')  # Replace with your MongoDB connection string
