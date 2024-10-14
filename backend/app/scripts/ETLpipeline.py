@@ -14,27 +14,37 @@ import json
 with open('assets/data.json', 'r') as dataFile:
     data = json.load(dataFile)
 
-df = pd.DataFrame.from_dict(data)
+df = pd.DataFrame.from_dict(data, orient='index')
+
+# Adding the keys (which are the IDs) as a column in the DataFrame
+df['id'] = df.index
+
+# Now you can access the list of IDs
+ids_list = df['id'].tolist()
+
+# Print the DataFrame to see the IDs added as a column
+print(df)
+
+# Printing the list of IDs
+print(ids_list)
 
 # Extracting the names of the items
-names_list = df.loc['name'].tolist()
+names_list = df['name'].tolist()
+sold_list = df['sold'].tolist()
 
-# Creating a dataframe with the names
-df_names = pd.DataFrame(data=names_list, columns=['name'])
-
-# Final table
-df_market = df.T
+print(sold_list)
 
 # Extracting all the names and their ID
 # addiing .tolist() removes the ids
-names_list = df_market['name']
-sold_list = df_market['sold']
+# names_list2 = df_market['name']
+# sold_list2 = df_market['sold']
 # Output
 # 8c4b685c-c5b5-4fcc-9011-d927d769cca3    WICKED RECKONING
 # 7636a2cf-b53e-45d5-90e5-441c42442d90      CHROMA STREAKS
 # 34c6f416-3404-4925-a5d6-33686b88e6c3      CHROMA STREAKS
 
-print (names_list)
+# print (names_list)
+# print (names_list2)
 
 '''
 # Connect to MongoDB 
