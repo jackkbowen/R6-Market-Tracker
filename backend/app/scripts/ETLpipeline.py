@@ -1,7 +1,15 @@
+from datetime import datetime, timezone
+import time
 import pandas as pd
 import pymongo
 from pymongo import MongoClient
 import json
+
+
+# Takes Unix Epoch time and converts it to YYYY-MM-DD HH:MM:SS format
+# EX epoch time reads: 1728453696.814635
+def convertUnixTimeToDateTime(unixTime):
+    return [[sold, datetime.fromtimestamp(timestamp, timezone.utc).strftime('%Y-%m-%d %H:%M:%S')] for sold, timestamp in unixTime]
 
 # Load data from the data dump file
 # itemID is the unique identifier for each item
@@ -23,17 +31,23 @@ df['id'] = df.index
 ids_list = df['id'].tolist()
 
 # Print the DataFrame to see the IDs added as a column
-print(df)
+# print(df)
 
 # Printing the list of IDs
-print(ids_list)
+# print(ids_list)
 
 # Extracting the names of the items
 names_list = df['name'].tolist()
 sold_list = df['sold'].tolist()
 
-print(sold_list)
+# print(datetime.utcfromtimestamp(sold_list[0][0][1]))
+# dateTime = datetime.fromtimestamp(sold_list[0][0][1], timezone.utc)
+# print(dateTime.replace(microsecond=0))
 
+convertedSoldList = [convertUnixTimeToDateTime(sold) for sold in sold_list]
+# print(convertedSoldList)
+df['sold'] = convertedSoldList
+print(df['sold'])
 # Extracting all the names and their ID
 # addiing .tolist() removes the ids
 # names_list2 = df_market['name']
