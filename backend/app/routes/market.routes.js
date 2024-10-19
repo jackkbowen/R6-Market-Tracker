@@ -19,6 +19,12 @@ module.exports = (app) => {
     // Gets data through the ubisoft API
     router.get("/scanMarket", marketplaceItem.scanMarket);
 
+    // Calls the ETL pipeline script to update the database
+    // Stand alone function for if I have a use for it
+    // Upserts data to append sales data to the existing data
+    // TODO Should always be called after scanMarket. Need to find a way to run both in one call and have the server not crash, maybe just nodemon issue
+    router.get("/updateDatabase", marketplaceItem.updateDatabase);
+
 
     app.use("/market", router);
 };

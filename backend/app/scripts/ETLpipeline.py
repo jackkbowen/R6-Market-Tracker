@@ -1,14 +1,14 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import time
 import pandas as pd
 import pymongo
-from pymongo import MongoClient
+from pymongo import MongoClient, UpdateOne
 import json
 
 # Takes Unix Epoch time and converts it to YYYY-MM-DD HH:MM:SS format
 # EX epoch time reads: 1728453696.814635
 def convertUnixTimeToDateTime(unixTime):
-    return [[sold, datetime.fromtimestamp(timestamp, timezone.utc).strftime('%Y-%m-%d %H:%M:%S')] for sold, timestamp in unixTime]
+    return [[sold, datetime.fromtimestamp(timestamp, timezone(timedelta(hours=-7))).strftime('%Y-%m-%d %H:%M:%S')] for sold, timestamp in unixTime]
 
 
 # raw data 
@@ -21,7 +21,7 @@ def convertUnixTimeToDateTime(unixTime):
 # data list[minBuyer, maxBuyer, numBuyers, minSeller, maxSeller, numSellers]
 
 # Load data from the data dump JSON file
-with open('assets/data.json', 'r') as dataFile:
+with open('../backend/app/scripts/assets/data.json', 'r') as dataFile:
     data = json.load(dataFile)
 
 # Creating a DataFrame from the data
@@ -57,5 +57,21 @@ collection = db['marketplaceItems']
 # Need to clean up the data before inserting into the database
 # Work on this on future TODO
 
-collection.insert_many(df.to_dict('records'))
+# Execute bulk_write to update or insert the documents
+# Match the document by the unique identifier 'id'
+# Update all fields except 'sold'
+# Append new sold data without duplicates using $addToSet and $each
+# Insert if the document doesn't exist
+collection.bulk_write([
+    UpdateOne(
+        {'id': record['id']},                                                        
+        {
+            '$set': {key: value for key, value in record.items() if key != 'sold'}, 
+            '$addToSet': {'sold': {'$each': record['sold']}}                        
+        },
+        upsert=True                                                  
+    )
+    for record in df.to_dict('records')
+])
 
+print("Market Data has been added to the Database successfully.")

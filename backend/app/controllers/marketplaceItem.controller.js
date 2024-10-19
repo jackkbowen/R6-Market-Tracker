@@ -67,16 +67,18 @@ exports.scanMarket = asyncHandler(async (req, res) => {
     });
 });
 
-async function checkForDataFile(dataFile) {
+exports.updateDatabase = asyncHandler(async (req, res) => {
     
-    fs.readFile(dataFile, (err, data) => {
-        if (err) {
-            // Create an empty data file if it doesn't exist
-            fs.writeFile(dataFile, JSON.stringify({}), (writeErr) => {
-                if (writeErr) {
-                    console.error(writeErr);
-                }
-            }); 
+    exec("python ../backend/app/scripts/ETLpipeline.py", (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            res.status(500).send({ message: "Error executing script" });
         }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            res.status(500).send({ message: "Script execution error" });
+        }
+        console.log(`stdout: ${stdout}`);
+        res.status(200).send({ message: "Market Data has been added to the Database successfully."});
     });
-}
+});
