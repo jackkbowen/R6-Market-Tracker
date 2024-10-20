@@ -1,6 +1,9 @@
-const express = require("express");
 const cors = require("cors");
 require("dotenv").config({ path: './config.env' }); // Ensure this is called early
+const cron = require("node-cron");
+const express = require("express");
+const shell = require("shelljs");
+const { exec } = require("child_process");
 const app = express();
 
 var corsOptions = {
@@ -40,3 +43,15 @@ const PORT = process.env.PORT; // Provide a default port
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+
+// Schedule the market scan
+cron.schedule('* * * * *', function(){
+  console.log('Running a task every minute');
+  if (shell.exec("python ./app/scripts/scanMarket.py").code !== 0) {
+    console.log("Error: Script failed to execute");
+    shell.exit(1);
+  }
+  else {
+    console.log("Script executed successfully");
+  }
+})
