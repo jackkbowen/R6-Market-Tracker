@@ -45,13 +45,32 @@ app.listen(PORT, () => {
 });
 
 // Schedule the market scan
-cron.schedule('* * * * *', function(){
-  console.log('Running a task every minute');
-  if (shell.exec("python ./app/scripts/scanMarket.py").code !== 0) {
-    console.log("Error: Script failed to execute");
-    shell.exit(1);
-  }
-  else {
-    console.log("Script executed successfully");
-  }
+cron.schedule('*/30 * * * *', function(){
+  var datetime = new Date().toLocaleString().replace(',','');
+  console.log('[ ' + datetime + ' ] ' + 'Scanning market...');
+  exec("python ../backend/app/scripts/scanMarket.py", (error, stdout, stderr) => {
+    if (error) {
+        console.log(`error: ${error.message}`);
+    }
+    if (stderr) {
+        console.log(`stderr: ${stderr}`);
+    }
+    //console.log(`stdout: ${stdout}`);
+  });
+  datetime = new Date().toLocaleString().replace(',','');
+  console.log('[ ' + datetime + ' ] ' + "Market scan complete");
+
+  exec("python ../backend/app/scripts/ETLpipeline.py", (error, stdout, stderr) => {
+    if (error) {
+        console.log(`error: ${error.message}`);
+    }
+    if (stderr) {
+        console.log(`stderr: ${stderr}`);
+    }
+    console.log(`stdout: ${stdout}`);
+  });
+
+  datetime = new Date().toLocaleString().replace(',','');
+  console.log('[ ' + datetime + ' ] ' + "ETL pipeline complete");
+
 })
