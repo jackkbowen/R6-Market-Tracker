@@ -36,7 +36,9 @@ class Auth:
 
     @staticmethod
     def get_basic_token(email: str, password: str) -> str:
-        return base64.b64encode(f"{email}:{password}".encode("utf-8")).decode("utf-8")
+        token = base64.b64encode(f"{email}:{password}".encode("utf-8")).decode("utf-8")
+        print(f'[ - Generated token: {token} ]')
+        return token
 
     def __init__(
             self,
@@ -364,7 +366,7 @@ class Auth:
             return await resp.text()
     
     async def try_query_db(self):
-        await asyncio.sleep(0.250)
+        await asyncio.sleep(.25)
 
         res = await self.get_db(f"https://public-ubiservices.ubi.com/v1/profiles/me/uplay/graphql")
 
@@ -460,220 +462,18 @@ class Auth:
             asset_url
         ]
 
-account_platform_blocklist = [
-    'Coders Rank', 'Fiverr', 'HackerNews', 'Modelhub (NSFW)', 'metacritic', 'xHamster (NSFW)',
-    'CNET', 'YandexMusic', 'HackerEarth', 'OpenStreetMap', 'Pinkbike', 'Slides', 'Strava'
-]
-
-intents = discord.Intents.default()
-intents.message_content = True
-
-if ( not exists("../backend/app/scripts/assets/data.json") ):
-    with open('../backend/app/scripts/assets/data.json', 'w') as f:
-        f.write("{}")
-
-if ( not exists("../backend/app/scripts/assets/ids.json") ):
-    with open('../backend/app/scripts/assets/ids.json', 'w') as f:
-        f.write('{"black ice r4-c": "aee4bdf2-0b54-4c6d-af93-9fe4848e1f76"}')
-
-data_file = open("../backend/app/scripts/assets/data.json", "r")
-data = json.loads(data_file.read())
-data_file.close()
-
-item_id_file = open("../backend/app/scripts/assets/ids.json", "r")
-item_ids = json.loads(item_id_file.read())
-item_id_file.close()
-
-client = commands.Bot(command_prefix='.', intents=intents)
-
-@client.event
-async def on_ready():
-    print("[ Connected to Discord ]")
-    print(time.time())
-
-    print("[ Starting market scan daemon ]")
-    scan_market.start()
-    print("[ Started market scan daemon ]")
-
-@client.event
-async def on_message(message):
-    if message.author != client.user:
-        cmd = message.content.split(" ")
-
-        name_map_file = open("../backend/app/scripts/assets/ids.json", "r")
-        name_map = json.loads(name_map_file.read())
-        name_map_file.close()
-
-        match cmd.pop(0):
-            case "econ":
-                try:
-                    print(os.environ["NO_COMMANDS"])
-
-                    embed=discord.Embed(title=f'Not available!', description=f'This bot no longer uses the `econ` prefix.\nInterested in seeing what it can do now? Run `r6 help`!\n\n*If you would like to purchase access or this message is in error, contact @hiibolt on Discord!*', color=0xFF5733)
-                    embed.set_thumbnail(url="https://github.com/hiibolt/hiibolt/assets/91273156/4a7c1e36-bf24-4f5a-a501-4dc9c92514c4")
-                    await message.channel.send(embed=embed)
-
-                    return
-                except:
-                    print("Commands are enabled, continuing...")
-                    pass
-
-                match cmd.pop(0):
-                    case "list":
-                        msg = ""
-                        item_no = 0
-                        for key, value in name_map.items():
-                            msg += f'{key}\n'
-                            item_no += 1
-                            if ( item_no > 99 ):
-                                break
-                        embed=discord.Embed(title=f'Tracked Skins', description=f'# Ask Bolt for new Items.\n\n# Skins:\n{msg}', color=0xFF5733)
-                        embed.set_thumbnail(url="https://github.com/hiibolt/hiibolt/assets/91273156/4a7c1e36-bf24-4f5a-a501-4dc9c92514c4")
-                        await message.channel.send(embed=embed)
-                        return
-                    case "id":
-                        item_id = " ".join(cmd).lower()
-                        _data = None
-                        print(json.dumps(data, indent=2))
-                        try:
-                            _data = data[item_id]
-                        except:
-                            msg = "We aren't tracking this item ID!"
-                            embed=discord.Embed(title=f'Help', description=f'# Ask @hiibolt on GH/DC for help!\n\n## {msg}', color=0xFF5733)
-                            embed.set_thumbnail(url="https://github.com/hiibolt/hiibolt/assets/91273156/4a7c1e36-bf24-4f5a-a501-4dc9c92514c4")
-                            await message.channel.send(embed=embed)
-                        if ( _data == None):
-                            return
-
-                        cleaned_data = [x[0] for x in _data["sold"] if x[0]]
-                        sold_len = len(cleaned_data)
-                        ten_RAP = round(sum(cleaned_data[-10:]) / max(1, min(10, sold_len)))
-                        hundred_RAP = round(sum(cleaned_data[-100:]) / max(1, min(100, sold_len)))
-                        all_time_RAP = round(sum(cleaned_data) / max(1, sold_len))
-
-                        msg = f'# Buy:\n\tMinimum Buyer: **{_data["data"][0]}** R6 credits\n\tMaximum Buyer: **{_data["data"][1]}** R6 credits\n\tVolume Buyers: **{_data["data"][2]}**\n'
-                        msg += f'# Sell:\n\tMinimum Seller: **{_data["data"][3]}** R6 credits\n\tMaximum Seller: **{_data["data"][4]}** R6 credits\n\tVolume Sellers: **{_data["data"][5]}**\n\tLast Sold: **{_data["sold"][-1][0]}**\n\n'
-                        msg += f'### Quick Analysis:\n\tHighest Buyer vs. Lowest Seller: **{(_data["data"][3] or 0) - (_data["data"][1] or 0)}** R6 credits\n\tLast Sale vs. Lowest Seller: **{(_data["data"][3] or 0) - (_data["sold"][-1][0] or 0)} ({round(100 -((_data["sold"][-1][0] or 0) / (_data["data"][3] or 1)) * 100, 2)}%)** R6 credits\n'
-                        msg += f'### RAP:\n\t10 - **{ten_RAP}**\n\t100 - **{hundred_RAP}**\n\tAll Time - **{all_time_RAP}**\n\n\t*(Total Data: {sold_len})*\n### Tags:\n\n{_data["tags"]}\n### Item ID:\n\t{item_id}'
-                        embed=discord.Embed(title=f'{_data["name"]} ({_data["type"]})', url=f'https://www.ubisoft.com/en-us/game/rainbow-six/siege/marketplace?route=buy%252Fitem-details&itemId={item_id}', description=f'{msg}', color=0xFF5733)
-                        embed.set_thumbnail(url=_data["asset_url"])
-                        await message.channel.send(embed=embed)
-                    case "name":
-                        _data = None
-                        try:
-                            item_id = name_map[" ".join(cmd).lower()]
-                            _data = data[item_id]
-                        except:
-                            msg = "We aren't tracking this item name, try a different name or run 'econ list'!"
-                            embed=discord.Embed(title=f'Help', description=f'# Ask @hiibolt on GH/DC for help!\n\n## {msg}', color=0xFF5733)
-                            embed.set_thumbnail(url="https://github.com/hiibolt/hiibolt/assets/91273156/4a7c1e36-bf24-4f5a-a501-4dc9c92514c4")
-                            await message.channel.send(embed=embed)
-                        if ( _data == None):
-                            return
-
-                        cleaned_data = [x[0] for x in _data["sold"] if x[0]]
-                        sold_len = len(cleaned_data)
-                        ten_RAP = round(sum(cleaned_data[-10:]) / max(1, min(10, sold_len)))
-                        hundred_RAP = round(sum(cleaned_data[-100:]) / max(1, min(100, sold_len)))
-                        all_time_RAP = round(sum(cleaned_data) / max(1, sold_len))
-
-                        msg = f'# Buy:\n\tMinimum Buyer: **{_data["data"][0]}** R6 credits\n\tMaximum Buyer: **{_data["data"][1]}** R6 credits\n\tVolume Buyers: **{_data["data"][2]}**\n'
-                        msg += f'# Sell:\n\tMinimum Seller: **{_data["data"][3]}** R6 credits\n\tMaximum Seller: **{_data["data"][4]}** R6 credits\n\tVolume Sellers: **{_data["data"][5]}**\n\tLast Sold: **{_data["sold"][-1][0]}**\n\n'
-                        msg += f'### Quick Analysis:\n\tHighest Buyer vs. Lowest Seller: **{(_data["data"][3] or 0) - (_data["data"][1] or 0)}** R6 credits\n\tLast Sale vs. Lowest Seller: **{(_data["data"][3] or 0) - (_data["sold"][-1][0] or 0)} ({round(100 -((_data["sold"][-1][0] or 0) / (_data["data"][3] or 1)) * 100, 2)}%)** R6 credits\n'
-                        msg += f'### RAP:\n\t10 - **{ten_RAP}**\n\t100 - **{hundred_RAP}**\n\tAll Time - **{all_time_RAP}**\n\n\t*(Total Data: {sold_len})*\n### Tags:\n\n{_data["tags"]}\n### Item ID:\n\t{item_id}'
-                        embed=discord.Embed(title=f'{_data["name"]} ({_data["type"]})', url=f'https://www.ubisoft.com/en-us/game/rainbow-six/siege/marketplace?route=buy%252Fitem-details&itemId={item_id}', description=f'{msg}', color=0xFF5733)
-                        embed.set_thumbnail(url=_data["asset_url"])
-                        await message.channel.send(embed=embed)
-                    case "graph":
-                        num = cmd.pop(0)
-                        unit_type = cmd.pop(0)
-
-                        item_id = " ".join(cmd).lower()
-                        _data = copy.deepcopy(data[item_id])
-                        unit = "days"
-                        dividend = 86400
-                        
-                        match num:
-                            case "all":
-                                pass
-                            case _:
-                                _data["sold"] = [x for x in _data["sold"] if x[0]]
-                                _data["sold"] = _data["sold"][-int(num):]
-                                
-                        match unit_type:
-                            case "days":
-                                pass
-                            case "hours":
-                                unit = "hours"
-                                dividend = 86400 / 24
-                            case "minutes":
-                                unit = "minutes"
-                                dividend = 86400 / 24 / 60
-                            case _:
-                                msg = "The following units are available:\n\t- days\n\t- hours\n\t- minutes"
-                                embed=discord.Embed(title=f'Help', description=f'# Ask @hiibolt on GH/DC for help!\n\n# Skins:\n{msg}', color=0xFF5733)
-                                embed.set_thumbnail(url="https://github.com/hiibolt/hiibolt/assets/91273156/4a7c1e36-bf24-4f5a-a501-4dc9c92514c4")
-                                await message.channel.send(embed=embed)
-
-                        cleaned_data = [x[0] for x in _data["sold"] if x[0]]
-                        cleaned_times = [(time.time() - x[1]) / dividend for x in _data["sold"] if x[0]]
-                     
-                        print(f'{cleaned_times} vs {cleaned_data}')
-
-                        plt.scatter( np.array(cleaned_times), np.array(cleaned_data) )
-                        plt.xlabel( f' Time ({unit} ago) ' )
-                        plt.ylabel( " Purchase Amount " )
-
-                        trendline = np.polyfit( np.array(cleaned_times), np.array(cleaned_data), 1 )
-                        trendline_function = np.poly1d( trendline )
-                        plt.plot( cleaned_times, trendline_function(cleaned_times) )
-                        plt.title( f'{_data["name"]} ({_data["type"]})' )
-                        plt.savefig( f"graphs/{item_id}.png" )
-                        plt.clf()
-
-                        file = discord.File(f'graphs/{item_id}.png')
-                        e = discord.Embed()
-                        e.set_image(url=f'attachment://{item_id}.png')
-                        await message.channel.send(file = file, embed=e)
-                    case "profit":
-                        purchase_price = float(cmd.pop(0))
-                        profitable_sell = purchase_price * 1.1
-
-                        item_id = " ".join(cmd).lower()
-                        _data = None
-                        try:
-                            _data = data[item_id]
-                        except:
-                            msg = "We aren't tracking this item ID!"
-                            embed=discord.Embed(title=f'Help', description=f'# Ask @hiibolt on GH/DC for help!\n\n## {msg}', color=0xFF5733)
-                            embed.set_thumbnail(url="https://github.com/hiibolt/hiibolt/assets/91273156/4a7c1e36-bf24-4f5a-a501-4dc9c92514c4")
-                            await message.channel.send(embed=embed)
-                        if ( _data == None):
-                            return
-                        
-                        cleaned_data = [x[0] for x in _data["sold"] if x[0]]
-                        sold_len = len(cleaned_data)
-                        ten_RAP = round(sum(cleaned_data[-10:]) / max(1, min(10, sold_len)))
-
-                        msg = f'\n### Purchased At:\n\t**{purchase_price}** R6 credits\n### Sale Price to Break Even:\n\t**{profitable_sell}** R6 credits\n### Current Net Gain if Sold:\n\t**{((ten_RAP or 0) - purchase_price) * 0.90}** R6 credits'
-                        embed=discord.Embed(title=f'Profit Margins', description=f'{msg}', color=0xFF5733)
-                        embed.set_thumbnail(url="https://github.com/hiibolt/hiibolt/assets/91273156/4a7c1e36-bf24-4f5a-a501-4dc9c92514c4")
-                        await message.channel.send(embed=embed)
-                    case _:
-                        msg = "The following commands are available:\n\n\t- econ name <item name>\n\n\t- econ id <item id>\n\n\t- econ graph <# entries (1, 2, ... | all)> <unit (days | hours | minutes)>\n\n\t- econ profit <what you purchased for> <item id>"
-                        embed=discord.Embed(title=f'Help', description=f'# Ask @hiibolt on GH/DC for help!\n\n# Skins:\n{msg}', color=0xFF5733)
-                        embed.set_thumbnail(url="https://github.com/hiibolt/hiibolt/assets/91273156/4a7c1e36-bf24-4f5a-a501-4dc9c92514c4")
-                        await message.channel.send(embed=embed)
-
-@tasks.loop(minutes=15)
 async def scan_market():
     with contextlib.suppress(Exception):
         print("[ Opening Session ]")
 
         auth = Auth(os.environ["AUTH_EMAIL"], os.environ["AUTH_PW"])
-
+        counter = 0  # Initialize a counter
+        
         print("[ Scanning market... ]")
         for key, item_id in item_ids.items():
+            if counter >= 118:  # Check if 119 items have been scanned
+                break
+            await asyncio.sleep(5)
             print(f'[ - [ Scanning {key} ] ]')
 
             auth.item_id = item_id
@@ -681,7 +481,6 @@ async def scan_market():
             if (not res):
                 print("Rate Limited!")
                 continue
-
             # Meta: NAME | TYPE | TAGS - Buyers: LOW | HIGH | VOL - Sellers: LOW | HIGH | VOL
             try:
                 data[item_id]
@@ -701,9 +500,12 @@ async def scan_market():
             if len(data[item_id]["sold"]) == 0 or data[item_id]["sold"][len(data[item_id]["sold"]) - 1][0] != res[9]:
                 data[item_id]["sold"] = data[item_id]["sold"] + [[res[9], time.time()]]
                 print('[ - - NEW LAST SOLD ]')
-
+            
+            counter += 1  # Increment the counter
+            
             print(f'[ ~ [ Done checking {key} ] ]')
             
+        
         print("[ Closing Session ]")
         await auth.close()
 
@@ -716,8 +518,25 @@ async def scan_market():
         print("[ FINISHED WRITING TO 'data.json' ]")
         prevTime = time.ctime(time.time())
         print("[ TIME FINISHED: ", prevTime, "]")
+
        
 
-                            
 
-client.run(os.environ["TOKEN"])
+if ( not exists("../scripts/assets/data.json") ):
+    with open('../scripts/assets/data.json', 'w') as f:
+        f.write("{}")
+
+if ( not exists("../scripts/assets/ids.json") ):
+    with open('../scripts/assets/ids.json', 'w') as f:
+        f.write('{"black ice r4-c": "aee4bdf2-0b54-4c6d-af93-9fe4848e1f76"}')
+
+data_file = open("../scripts/assets/data.json", "r")
+data = json.loads(data_file.read())
+data_file.close()
+
+item_id_file = open("../scripts/assets/ids.json", "r")
+item_ids = json.loads(item_id_file.read())
+item_id_file.close()
+
+if __name__ == "__main__":
+    asyncio.run(scan_market())

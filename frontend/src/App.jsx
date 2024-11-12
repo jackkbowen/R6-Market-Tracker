@@ -1,25 +1,24 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import NavBar from './components/NavBar/NavBar.jsx'
-import 'bulma/css/bulma.min.css';
 import './App.css'
+
+import NavBar from './components/NavBar/NavBar.jsx'
+import LandingPage from './components/LandingPage/LandingPage.jsx';
 
 function App() {
   return (
-  <BrowserRouter>
-      <NavBar/>
-      <div className = "pt-20">
-          <Routes>
-          <Route path="/">
-              <Route index />
-              <Route path="login" />
-              <Route path="about" />
-              <Route path="contact" />
+    <BrowserRouter>
+    <NavBar/>
+    <div className = "pt-20">
+        <Routes>
+            <Route index element={<LandingPage />}  />
+            <Route path="/login" />
+            <Route path="/about" />
+            <Route path="/contact" />
             
-          </Route>
-          </Routes>
+        </Routes>
       </div>
-  </BrowserRouter>
+    </BrowserRouter>
   );
 
 }
