@@ -12,6 +12,7 @@ export default {
       'GreyHair3': '#CFCFC4',
       'GreyHair4': '#696969',
       'Mossy1': '#3d4127',
+      'Mossy1Darker': '#262818',
       'Mossy2': '#636B2F',
     }
     },

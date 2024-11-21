@@ -75,3 +75,40 @@ collection.bulk_write([
 ])
 
 print("Market Data has been added to the Database successfully.")
+
+
+
+
+
+'''
+tags[Season] Extract the YXSX and use it to create a season ranking the in the DB
+def extract_numbers(season_code):
+    """
+    Extract the numbers in front of 'Y' and 'S' into separate variables.
+    """
+    # Assumes format is always "Y<digit>S<digit>"
+    year = int(season_code[1])  # Character after 'Y'
+    season = int(season_code[3])  # Character after 'S'
+    return year, season
+
+# Example usage
+season_code = "Y2S6"
+year, season = extract_numbers(season_code)
+print(f"Year: {year}, Season: {season}")
+
+
+OR MY SOLUTION
+
+def extract_numbers(season_code):
+    match = re.match(r"Y(\d+)S(\d+)", season_code)
+        if match:
+            year = int(match.group(1))  # Number after 'Y'
+            season = int(match.group(2))  # Number after 'S'
+            return year, season
+
+season_code = "Y2S6"
+year, season = extract_numbers(season_code)
+print(f"Year: {year}, Season: {season}")
+
+
+'''
