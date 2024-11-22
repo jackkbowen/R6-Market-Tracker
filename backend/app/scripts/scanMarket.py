@@ -473,7 +473,7 @@ async def scan_market():
         for key, item_id in item_ids.items():
             if counter >= 118:  # Check if 119 items have been scanned
                 break
-            await asyncio.sleep(5)
+
             print(f'[ - [ Scanning {key} ] ]')
 
             auth.item_id = item_id
@@ -521,20 +521,19 @@ async def scan_market():
 
        
 
-
-if ( not exists("../scripts/assets/data.json") ):
-    with open('../scripts/assets/data.json', 'w') as f:
+if ( not exists("../backend/app/scripts/assets/data.json") ):
+    with open('../backend/app/scripts/assets/data.json', 'w') as f:
         f.write("{}")
 
-if ( not exists("../scripts/assets/ids.json") ):
-    with open('../scripts/assets/ids.json', 'w') as f:
+if ( not exists("../backend/app/scripts/assets/ids.json") ):
+    with open('../backend/app/scripts/assets/ids.json', 'w') as f:
         f.write('{"black ice r4-c": "aee4bdf2-0b54-4c6d-af93-9fe4848e1f76"}')
 
-data_file = open("../scripts/assets/data.json", "r")
+data_file = open("../backend/app/scripts/assets/data.json", "r")
 data = json.loads(data_file.read())
 data_file.close()
 
-item_id_file = open("../scripts/assets/ids.json", "r")
+item_id_file = open("../backend/app/scripts/assets/ids.json", "r")
 item_ids = json.loads(item_id_file.read())
 item_id_file.close()
 
