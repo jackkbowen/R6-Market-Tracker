@@ -36,7 +36,12 @@ db.mongoose
     process.exit();
   });
 
+
+// ---------------------------------------------------------
+// ROUTES
+// ---------------------------------------------------------
 require("./app/routes/market.routes")(app);
+require("./app/routes/db.routes")(app);
 
 // Set port, listen for requests
 const PORT = process.env.PORT; // Provide a default port

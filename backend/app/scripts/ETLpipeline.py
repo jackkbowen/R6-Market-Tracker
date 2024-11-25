@@ -4,12 +4,41 @@ import pandas as pd
 import pymongo
 from pymongo import MongoClient, UpdateOne
 import json
+import re
 
 # Takes Unix Epoch time and converts it to YYYY-MM-DD HH:MM:SS format
 # EX epoch time reads: 1728453696.814635
 def convertUnixTimeToDateTime(unixTime):
     return [[sold, datetime.fromtimestamp(timestamp, timezone(timedelta(hours=-7))).strftime('%Y-%m-%d %H:%M:%S')] for sold, timestamp in unixTime]
 
+
+def extract_season_code(df):
+    # Define the regex pattern
+    pattern = r"Y\d+S\d+"
+
+    # Filter the list for entries that match the regex
+    matches = [item for sublist in df["tags"] for item in sublist if re.match(pattern, item)]
+    matches.append("N/A")
+         
+    return matches
+
+def extract_Supply(df):  
+
+    Supply = []
+
+    for row in df["data"]:
+        Supply.append(row[2])
+
+    return Supply
+
+def extract_Demand(df):  
+
+    Demand = []
+
+    for row in df["data"]:
+        Demand.append(row[5])
+
+    return Demand
 
 # raw data 
 # itemID is the unique identifier for each item
@@ -21,7 +50,7 @@ def convertUnixTimeToDateTime(unixTime):
 # data list[minBuyer, maxBuyer, numBuyers, minSeller, maxSeller, numSellers]
 
 # Load data from the data dump JSON file
-with open('../backend/app/scripts/assets/data.json', 'r') as dataFile:
+with open("../backend/app/scripts/assets/data.json", 'r') as dataFile:
     data = json.load(dataFile)
 
 # Creating a DataFrame from the data
@@ -29,6 +58,25 @@ df = pd.DataFrame.from_dict(data, orient='index')
 
 # Adding the keys (which are the IDs) as a column in the DataFrame
 df['id'] = df.index
+
+
+#print ([row[2] for row in df['tags']])
+
+# Adding a column for the extracted season data from the tags
+filteredSeason = extract_season_code(df)
+
+# Adding a column for the extracted supply data from the tags
+filteredSupply = extract_Supply(df)
+
+# Adding a column for the extracted demand data from the tags
+filteredDemand = extract_Demand(df)
+
+df.insert(2, "Season", filteredSeason, True)
+
+df.insert(3, "Supply", filteredSupply, True)
+
+df.insert(4, "Demand", filteredDemand, True)
+
 
 # Now you can access the list of IDs
 ids_list = df['id'].tolist()
@@ -44,7 +92,7 @@ convertedSoldList = [convertUnixTimeToDateTime(sold) for sold in sold_list]
 # Adding the converted sold list to the DataFrame
 df['sold'] = convertedSoldList
 
-print(df['sold'])
+#print(df['sold'])
 
 
 # Connect to MongoDB 

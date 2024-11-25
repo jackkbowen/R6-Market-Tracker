@@ -33,6 +33,18 @@ const marketplaceItemSchema = new mongoose.Schema(
             required: false,
             default: [null, null, null, null, null, null],
         },
+        Season: {
+            type: String,
+            required: true,
+        },
+        Demand: {
+            type: Number,
+            required: true,
+        },
+        Supply: {
+            type: Number,
+            required: true,
+        },
     },
     { timestamps: true, upsert: true }
 );
