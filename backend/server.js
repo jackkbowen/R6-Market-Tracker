@@ -50,7 +50,7 @@ app.listen(PORT, () => {
 });
 
 // Schedule the market scan
-cron.schedule('*/10 * * * *', function(){
+cron.schedule('*/5 * * * *', function(){
   var datetime = new Date().toLocaleString().replace(',','');
   console.log('[ ' + datetime + ' ] ' + 'Scanning market...');
   exec("python ../backend/app/scripts/scanMarket.py", (error, stdout, stderr) => {
@@ -68,7 +68,7 @@ cron.schedule('*/10 * * * *', function(){
 
 // Stagger the ETL pipeline to avoid conflicting with the market scan
 // Appends the recent sold data to the database
-cron.schedule('5 * * * *', function(){
+cron.schedule('*/6 * * * *', function(){
   var datetime = new Date().toLocaleString().replace(',','');
   console.log('[ ' + datetime + ' ] ' + 'Starting ETL pipeline...');
   exec("python ../backend/app/scripts/ETLpipeline.py", (error, stdout, stderr) => {

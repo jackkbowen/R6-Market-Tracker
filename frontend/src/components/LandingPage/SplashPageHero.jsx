@@ -6,6 +6,7 @@ import downArrow from '../../assets/downArrow.png'
 
 function SplashPageHero() {
     const [currentArrow, setCurrentArrow] = useState(null);
+    const [itemButtons, setItemButtons] = useState([]);
 
     function setCurrentArrowName(filterName) {
         setCurrentArrow((prevFilter) => (prevFilter === filterName ? null : filterName));
@@ -28,6 +29,7 @@ function SplashPageHero() {
             </span>
 
             <div className="flex justify-center flex-wrap">
+                {itemButtons}
                 <ItemButton
                     itemImage="https://ubiservices.cdn.ubi.com/0d2ae42d-4c27-4cb7-af6c-2099062302bb/DeployerAssetsJune2023/69fd6436_b10f_7a13_cdea_96d81637c1ee.png" 
                     itemName="Glacier SMG11"

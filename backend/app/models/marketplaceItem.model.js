@@ -46,7 +46,7 @@ const marketplaceItemSchema = new mongoose.Schema(
             required: true,
         },
     },
-    { timestamps: true, upsert: true }
+    { timestamps: true, upsert: true, collection : 'marketplaceItems' }
 );
 
 module.exports = mongoose.model('MarketplaceItem', marketplaceItemSchema);
