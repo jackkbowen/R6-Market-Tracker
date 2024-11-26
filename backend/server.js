@@ -50,7 +50,7 @@ app.listen(PORT, () => {
 });
 
 // Schedule the market scan
-cron.schedule('*/30 * * * *', function(){
+cron.schedule('*/10 * * * *', function(){
   var datetime = new Date().toLocaleString().replace(',','');
   console.log('[ ' + datetime + ' ] ' + 'Scanning market...');
   exec("python ../backend/app/scripts/scanMarket.py", (error, stdout, stderr) => {
