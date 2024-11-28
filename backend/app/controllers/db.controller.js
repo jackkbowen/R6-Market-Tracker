@@ -33,7 +33,7 @@ exports.trendingItems = asyncHandler(async (req, res) => {
     await marketplaceItems.find({})
         .sort({ "Demand": -1 })
         .limit(6)
-        .select({ name: 1,  asset_url: 1, Demand: 1,  Supply: 1 }) 
+        .select({ id: 1, name: 1,  asset_url: 1, Demand: 1,  Supply: 1, AverageSold: 1 }) 
         .then(data => {
             if (!data) {
                 res.status(404).send({

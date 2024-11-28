@@ -525,15 +525,15 @@ if ( not exists("../backend/app/scripts/assets/data.json") ):
     with open('../backend/app/scripts/assets/data.json', 'w') as f:
         f.write("{}")
 
-if ( not exists("../backend/app/scripts/assets/ids2.json") ):
-    with open('../backend/app/scripts/assets/ids2.json', 'w') as f:
+if ( not exists("../backend/app/scripts/assets/ids.json") ):
+    with open('../backend/app/scripts/assets/ids.json', 'w') as f:
         f.write('{"black ice r4-c": "aee4bdf2-0b54-4c6d-af93-9fe4848e1f76"}')
 
 data_file = open("../backend/app/scripts/assets/data.json", "r")
 data = json.loads(data_file.read())
 data_file.close()
 
-item_id_file = open("../backend/app/scripts/assets/ids2.json", "r")
+item_id_file = open("../backend/app/scripts/assets/ids.json", "r")
 item_ids = json.loads(item_id_file.read())
 item_id_file.close()
 

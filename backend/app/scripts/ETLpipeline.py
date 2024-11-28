@@ -23,7 +23,6 @@ def extract_season_code(df):
     return matches
 
 def extract_Supply(df):  
-
     Supply = []
 
     for row in df["data"]:
@@ -32,13 +31,29 @@ def extract_Supply(df):
     return Supply
 
 def extract_Demand(df):  
-
     Demand = []
 
     for row in df["data"]:
         Demand.append(row[5])
 
     return Demand
+
+def extract_Price(df):
+    Price = []
+    avgPrice = []
+    averageSold = 0
+
+    for data in df["sold"]:
+        saleValues = [soldData[0] for soldData in data]
+       
+        # Compute average price   
+        avg = sum(saleValues) / len(saleValues)
+        averageSold = round(avg)
+
+        avgPrice.append(averageSold)
+
+
+    return avgPrice
 
 # raw data 
 # itemID is the unique identifier for each item
@@ -50,7 +65,7 @@ def extract_Demand(df):
 # data list[minBuyer, maxBuyer, numBuyers, minSeller, maxSeller, numSellers]
 
 # Load data from the data dump JSON file
-with open("../backend/app/scripts/assets/data.json", 'r') as dataFile:
+with open("../scripts/assets/data.json", 'r') as dataFile:
     data = json.load(dataFile)
 
 # Creating a DataFrame from the data
@@ -59,8 +74,20 @@ df = pd.DataFrame.from_dict(data, orient='index')
 # Adding the keys (which are the IDs) as a column in the DataFrame
 df['id'] = df.index
 
+# Now you can access the list of IDs
+ids_list = df['id'].tolist()
 
-#print ([row[2] for row in df['tags']])
+# Extracting the names and sales data of the items
+names_list = df['name'].tolist()
+sold_list = df['sold'].tolist()
+
+# Calling convertUnixTimeToDateTime helper function
+# Itterates through the sold list and converts the Unix time to a readable format (YYYY-MM-DD HH:MM:SS)
+convertedSoldList = [convertUnixTimeToDateTime(sold) for sold in sold_list]
+
+# Adding the converted sold list to the DataFrame
+df['sold'] = convertedSoldList
+
 
 # Adding a column for the extracted season data from the tags
 filteredSeason = extract_season_code(df)
@@ -71,26 +98,21 @@ filteredSupply = extract_Supply(df)
 # Adding a column for the extracted demand data from the tags
 filteredDemand = extract_Demand(df)
 
+# Adding a column for the extracted demand data from the tags
+averageSold = extract_Price(df)
+
+
+
+# Item Button Endpoints
+# Inserting the new columns into the DataFrame
+
 df.insert(2, "Season", filteredSeason, True)
 
 df.insert(3, "Supply", filteredSupply, True)
 
 df.insert(4, "Demand", filteredDemand, True)
 
-
-# Now you can access the list of IDs
-ids_list = df['id'].tolist()
-
-# Extracting the names of the items
-names_list = df['name'].tolist()
-sold_list = df['sold'].tolist()
-
-# Calling convertUnixTimeToDateTime helper function
-# Itterates through the sold list and converts the Unix time to a readable format (YYYY-MM-DD HH:MM:SS)
-convertedSoldList = [convertUnixTimeToDateTime(sold) for sold in sold_list]
-
-# Adding the converted sold list to the DataFrame
-df['sold'] = convertedSoldList
+df.insert(5, "AverageSold", averageSold, True)
 
 #print(df['sold'])
 
@@ -123,40 +145,3 @@ collection.bulk_write([
 ])
 
 print("Market Data has been added to the Database successfully.")
-
-
-
-
-
-'''
-tags[Season] Extract the YXSX and use it to create a season ranking the in the DB
-def extract_numbers(season_code):
-    """
-    Extract the numbers in front of 'Y' and 'S' into separate variables.
-    """
-    # Assumes format is always "Y<digit>S<digit>"
-    year = int(season_code[1])  # Character after 'Y'
-    season = int(season_code[3])  # Character after 'S'
-    return year, season
-
-# Example usage
-season_code = "Y2S6"
-year, season = extract_numbers(season_code)
-print(f"Year: {year}, Season: {season}")
-
-
-OR MY SOLUTION
-
-def extract_numbers(season_code):
-    match = re.match(r"Y(\d+)S(\d+)", season_code)
-        if match:
-            year = int(match.group(1))  # Number after 'Y'
-            season = int(match.group(2))  # Number after 'S'
-            return year, season
-
-season_code = "Y2S6"
-year, season = extract_numbers(season_code)
-print(f"Year: {year}, Season: {season}")
-
-
-'''
