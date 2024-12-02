@@ -511,7 +511,7 @@ async def scan_market():
 
         print("[ WRITING TO 'data.json' ]")
 
-        data_file = open("../backend/app/scripts/assets/data.json", "w")
+        data_file = open("../scripts/assets/data.json", "w")
         data_file.write(json.dumps(data, indent=2))
         data_file.close()
 
@@ -525,17 +525,20 @@ if ( not exists("../backend/app/scripts/assets/data.json") ):
     with open('../backend/app/scripts/assets/data.json', 'w') as f:
         f.write("{}")
 
-if ( not exists("../backend/app/scripts/assets/ids.json") ):
-    with open('../backend/app/scripts/assets/ids.json', 'w') as f:
+if ( not exists("../backend/app/scripts/assets/idList_1.json") ):
+    with open('../backend/app/scripts/assets/idList_1.json', 'w') as f:
         f.write('{"black ice r4-c": "aee4bdf2-0b54-4c6d-af93-9fe4848e1f76"}')
 
 data_file = open("../backend/app/scripts/assets/data.json", "r")
 data = json.loads(data_file.read())
 data_file.close()
 
-item_id_file = open("../backend/app/scripts/assets/ids.json", "r")
+item_id_file = open("../backend/app/scripts/assets/idList_1.json", "r")
 item_ids = json.loads(item_id_file.read())
 item_id_file.close()
 
 if __name__ == "__main__":
     asyncio.run(scan_market())
+
+
+# IF RUNNING FROM SCRIPTS FOLDER, MUST RESET ENV VARIABLES

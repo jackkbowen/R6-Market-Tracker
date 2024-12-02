@@ -9,6 +9,8 @@ module.exports = (app) => {
     // Query the top 6 trending items in the marketplace
     router.get("/trendingItems", dbQuery.trendingItems);
 
+    // Query the top 6 most expensive items in the marketplace
+    router.get("/expensiveItems", dbQuery.expensiveItems);
 
     app.use("/db", router);
 };

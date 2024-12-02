@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
-function SearchBar() {
+function SearchBar({ isUserSearching, setisUserSearching }) {
     const [searchQuery, setSearchQuery] = useState('');
 
+    function handleSubmit(event) {
+        event.preventDefault(); // Prevent the page from refreshing
+        setisUserSearching(true) // Set the user is searching to true
+      };
+
     return (
-        <form className="flex justify-center flex-grow px-24 py-8">
+        <form className="flex justify-center flex-grow px-24 py-8" onSubmit={handleSubmit}>
             <input 
                 type="text" 
                 placeholder='Search for an item...'
@@ -12,7 +17,10 @@ function SearchBar() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
             />
+            {isUserSearching && <p>yes</p>}
+            {!isUserSearching && <p>no</p>}
         </form>
+        
     );
 }
 
