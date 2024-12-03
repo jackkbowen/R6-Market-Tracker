@@ -65,7 +65,7 @@ def extract_Price(df):
 # data list[minBuyer, maxBuyer, numBuyers, minSeller, maxSeller, numSellers]
 
 # Load data from the data dump JSON file
-with open("../scripts/assets/data.json", 'r') as dataFile:
+with open("../backend/apps/scripts/assets/data.json", 'r') as dataFile:
     data = json.load(dataFile)
 
 # Creating a DataFrame from the data
