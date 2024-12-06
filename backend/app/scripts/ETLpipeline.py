@@ -11,7 +11,7 @@ import re
 def convertUnixTimeToDateTime(unixTime):
     return [[sold, datetime.fromtimestamp(timestamp, timezone(timedelta(hours=-7))).strftime('%Y-%m-%d %H:%M:%S')] for sold, timestamp in unixTime]
 
-
+# Extract the Y#S# season code from the tags
 def extract_season_code(df):
     # Define the regex pattern
     pattern = r"Y\d+S\d+"
@@ -22,6 +22,7 @@ def extract_season_code(df):
          
     return matches
 
+# Extract the Supply data from the tags
 def extract_Supply(df):  
     Supply = []
 
@@ -30,6 +31,7 @@ def extract_Supply(df):
 
     return Supply
 
+# Extract the Demand data from the tags
 def extract_Demand(df):  
     Demand = []
 
@@ -38,6 +40,7 @@ def extract_Demand(df):
 
     return Demand
 
+# Extract the average price from the sold data
 def extract_Price(df):
     Price = []
     avgPrice = []
@@ -65,7 +68,7 @@ def extract_Price(df):
 # data list[minBuyer, maxBuyer, numBuyers, minSeller, maxSeller, numSellers]
 
 # Load data from the data dump JSON file
-with open("../backend/apps/scripts/assets/data.json", 'r') as dataFile:
+with open("../backend/app/scripts/assets/data.json", 'r') as dataFile:
     data = json.load(dataFile)
 
 # Creating a DataFrame from the data

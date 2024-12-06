@@ -15,13 +15,13 @@ function DefaultItems() {
                 console.log(res.data);
                 let trendingItems = res.data.map(item => (
                     <ItemButton
-                    key={item.id}
-                    itemImage={item.asset_url}
-                    itemName={item.name}
-                    avgPrice={item.AverageSold}
-                    avgSupply={item.Supply}
-                    avgDemand={item.Demand}
-                />));
+                        key={item.id}
+                        itemImage={item.asset_url}
+                        itemName={item.name}
+                        avgPrice={item.AverageSold}
+                        avgSupply={item.Supply}
+                        avgDemand={item.Demand}
+                    />));
                 setTrendingButtons(trendingItems);
             })
             .catch((err) => {
@@ -37,13 +37,13 @@ function DefaultItems() {
                 console.log(res.data);
                 let expensiveItems = res.data.map(item => (
                     <ItemButton
-                    key={item.id}
-                    itemImage={item.asset_url}
-                    itemName={item.name}
-                    avgPrice={item.AverageSold}
-                    avgSupply={item.Supply}
-                    avgDemand={item.Demand}
-                />));
+                        key={item.id}
+                        itemImage={item.asset_url}
+                        itemName={item.name}
+                        avgPrice={item.AverageSold}
+                        avgSupply={item.Supply}
+                        avgDemand={item.Demand}
+                    />));
                 setExpensiveButtons(expensiveItems);
             })
             .catch((err) => {

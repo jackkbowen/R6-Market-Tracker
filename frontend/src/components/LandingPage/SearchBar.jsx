@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function SearchBar({ isUserSearching, setisUserSearching }) {
     const [searchQuery, setSearchQuery] = useState('');
+    const navigate = useNavigate();
 
     function handleSubmit(event) {
         event.preventDefault(); // Prevent the page from refreshing
         setisUserSearching(true) // Set the user is searching to true
+        if (searchQuery.trim()) {
+            navigate(`/search`);
+          }
       };
 
     return (
@@ -17,8 +22,6 @@ function SearchBar({ isUserSearching, setisUserSearching }) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
             />
-            {isUserSearching && <p>yes</p>}
-            {!isUserSearching && <p>no</p>}
         </form>
         
     );
