@@ -4,6 +4,8 @@ import './App.css'
 
 import NavBar from './components/NavBar/NavBar.jsx'
 import LandingPage from './components/LandingPage/LandingPage.jsx';
+import ErrorPage from './components/ErrorPage.jsx';
+import Search from './components/Search/Search.jsx';
 
 function App() {
   return (
@@ -11,11 +13,13 @@ function App() {
     <NavBar/>
     <div className = "pt-20">
       <Routes>
-          <Route index element={<LandingPage />}  />
-          <Route path="/login" />
-          <Route path="/about" />
-          <Route path="/contact" />
-          <Route path="/search"  />
+          <Route path="/" element={<NavBar />} />
+            <Route index element={<LandingPage />}  />
+            <Route path="login" />
+            <Route path="about" />
+            <Route path="contact" />
+            <Route path="search/:searchQuery" element={<Search />} />
+            <Route path="*" element={<ErrorPage />} />
           
       </Routes>
     </div>

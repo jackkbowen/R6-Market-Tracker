@@ -26,7 +26,10 @@ const LandingPage = () => {
     return (
         <>
             <div className="">
+                {/* Navigation bar - Dont need to add to NavBar, added to Default "/" route in App.jsx
                 <NavBar/>
+                */}
+        
 
                 {/* Landing page welcome text*/}
                 <span>
