@@ -117,6 +117,8 @@ df.insert(4, "Demand", filteredDemand, True)
 
 df.insert(5, "AverageSold", averageSold, True)
 
+df = df[df['id'].notna()]
+
 #print(df['sold'])
 
 
@@ -135,6 +137,7 @@ collection = db['marketplaceItems']
 # Update all fields except 'sold'
 # Append new sold data without duplicates using $addToSet and $each
 # Insert if the document doesn't exist
+
 collection.bulk_write([
     UpdateOne(
         {'id': record['id']},                                                        
