@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import logo from '../../assets/SMlogoNoBG.png'
 
+import Footer from '../Footer/Footer';
+
 
 const NavBar = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -8,6 +10,7 @@ const NavBar = () => {
 
 
   return ( 
+    <>
     <nav className="bg-Mossy1 fixed w-full shadow-lg shadow-grey-800 z-20 top-0 left-0">
       <div className="max-w-screen-xl flex items-center justify-start mx-auto p-4">
         <a href="http://localhost:5173/" className="flex items-center space-x-3">
@@ -32,6 +35,9 @@ const NavBar = () => {
         */}
       </div>
     </nav>
+    </>
+
+    
 
 
     /*

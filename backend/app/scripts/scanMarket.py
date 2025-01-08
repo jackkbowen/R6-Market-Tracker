@@ -511,7 +511,7 @@ async def scan_market():
 
         print("[ WRITING TO 'data.json' ]")
 
-        data_file = open("../scripts/assets/data.json", "w")
+        data_file = open("../backend/app/scripts/assets/data.json", "w")
         data_file.write(json.dumps(data, indent=2))
         data_file.close()
 
