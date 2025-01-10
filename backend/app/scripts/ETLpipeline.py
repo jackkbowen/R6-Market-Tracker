@@ -138,16 +138,21 @@ collection = db['marketplaceItems']
 # Append new sold data without duplicates using $addToSet and $each
 # Insert if the document doesn't exist
 
-collection.bulk_write([
-    UpdateOne(
-        {'id': record['id']},                                                        
-        {
-            '$set': {key: value for key, value in record.items() if key != 'sold'}, 
-            '$addToSet': {'sold': {'$each': record['sold']}}                        
-        },
-        upsert=True                                                  
-    )
-    for record in df.to_dict('records')
-])
+try:
+    # Perform the bulk write operation
+    collection.bulk_write([
+        UpdateOne(
+            {'itemID': record['id']},
+            {
+                '$set': {key: value for key, value in record.items() if key != 'sold'},
+                '$addToSet': {'sold': {'$each': record.get('sold', [])}}
+            },
+            upsert=True
+        )
+        for record in df.to_dict('records')
+    ])
+except pymongo.errors.BulkWriteError as e:
+    # Print full error details
+    print("Bulk write error:", e.details)
 
 print("Market Data has been added to the Database successfully.")

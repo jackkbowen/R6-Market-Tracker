@@ -68,7 +68,7 @@ cron.schedule('*/30  * * * *', function(){
 
 // Stagger the ETL pipeline to avoid conflicting with the market scan
 // Appends the recent sold data to the database
-cron.schedule('*/1 * * * *', function(){
+cron.schedule('5,35 * * * *', function(){
   var datetime = new Date().toLocaleString().replace(',','');
   console.log('[ ' + datetime + ' ] ' + 'Starting ETL pipeline...');
   exec("python ../backend/app/scripts/ETLpipeline.py", (error, stdout, stderr) => {
