@@ -6,6 +6,9 @@ from pymongo import MongoClient, UpdateOne
 import json
 import re
 
+#  Needed when I move to postgres
+# import psycopg2
+
 # Takes Unix Epoch time and converts it to YYYY-MM-DD HH:MM:SS format
 # EX epoch time reads: 1728453696.814635
 def convertUnixTimeToDateTime(unixTime):
@@ -120,6 +123,19 @@ df.insert(5, "AverageSold", averageSold, True)
 df = df[df['id'].notna()]
 
 #print(df['sold'])
+
+"""
+# Connect to the PostgreSQL database
+conn = psycopg2.connect(
+    dbname='', 
+    user='', 
+    password='jack', 
+    host='', 
+    port=5432
+)
+cursor = conn.cursor()
+"""
+
 
 
 # Connect to MongoDB 

@@ -3,7 +3,8 @@ asyncio
 datetime
 discord.py
 matplotlib
+numpy
 pandas
 pymongo
-numpy
+psycopg2-binary
 websockets
