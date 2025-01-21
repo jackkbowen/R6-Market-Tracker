@@ -9,7 +9,7 @@ function SearchBar({ isUserSearching, setisUserSearching }) {
         event.preventDefault(); // Prevent the page from refreshing
         setisUserSearching(true) // Set the user is searching to true
         if (searchQuery.trim()) {
-            navigate(`/search`);
+            navigate(`/search/${encodeURIComponent(searchQuery)}`);
           }
       };
 

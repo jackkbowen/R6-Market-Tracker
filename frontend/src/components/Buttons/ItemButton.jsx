@@ -3,7 +3,7 @@ import r6Credit from '../../assets/r6Credit.png'
 
 function ItemButton({ itemImage, itemName, avgPrice, avgSupply, avgDemand }) {
     return (
-        <button className="text-white text-lg w-full max-w-xs h-60 px-2 bg-GreyHair4 hover:bg-GreyHair4 hover:scale-105 rounded-md align-top shadow-lg shadow-GreyHair4 ml-8 mb-8">
+        <button className="text-white text-lg w-full max-w-[400px] h-60 px-2 bg-GreyHair4 hover:bg-GreyHair4 hover:scale-105 rounded-md align-top shadow-lg shadow-GreyHair4 ml-8 mb-8">
             <div className="flex flex-col h-full">
                 {/* Image Section */}
                 <div className="flex justify-center items-center h-32">

@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import NavBar from '../NavBar/NavBar';
 import Searchbar from './SearchBar';
+import Search from '../Search/Search'
 import FilterButton from '../Buttons/FilterButton';
 import SplashPageHero from './SplashPageHero';
 import Footer from '../Footer/Footer';
@@ -15,6 +16,7 @@ import DefaultItems from './DefaultItems';
 
 const LandingPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
     const [currentArrow, setCurrentArrow] = useState(null);
     const [isUserSearching, setIsUserSearching] = useState(false);
 
@@ -62,14 +64,7 @@ const LandingPage = () => {
                 </div>
 
                 <div>   
-                    {!isUserSearching && <DefaultItems/>}
-                    {isUserSearching && 
-                        <div>
-                            <h1 className="flex justify-center  text-3xl font-semibold text-white py-4">
-                                Search Results
-                            </h1>
-                        </div>
-                    }
+                    <DefaultItems/>
                 </div>
                 <Footer/>
             </div>

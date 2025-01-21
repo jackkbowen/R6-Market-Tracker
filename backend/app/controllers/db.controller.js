@@ -54,6 +54,7 @@ exports.trendingItems = asyncHandler(async (req, res) => {
 
 
 exports.expensiveItems = asyncHandler(async (req, res) => {
+    const queryString = req.query.search_query;
     await marketplaceItems.find({})
         .sort({ "AverageSold": -1 })
         .limit(6)
@@ -75,5 +76,30 @@ exports.expensiveItems = asyncHandler(async (req, res) => {
             return;
         });
 });
+
+
+exports.searchItems = asyncHandler(async(req,res) => {
+    console.log("In searchItems");
+    const queryString = req.query.search_query;
+    console.log("Query" + queryString);
+    await marketplaceItems.find({name: {$regex: queryString, $options: 'i'}})
+    .select({ id: 1, name: 1, asset_url: 1, Demand: 1,  Supply: 1, AverageSold: 1 })
+    .then(data => {
+        if (!data) {
+            res.status(404).send({
+                message: "No products found matching: " + queryString });
+            return;
+        }
+            res.status(200).send(data);
+            return;
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error retrieving items from merketplace."});
+            return;
+        });
+    });
+
+
 
 

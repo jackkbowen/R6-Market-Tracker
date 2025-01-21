@@ -12,6 +12,9 @@ module.exports = (app) => {
     // Query the top 6 most expensive items in the marketplace
     router.get("/expensiveItems", dbQuery.expensiveItems);
 
+    // Query the items database based on the search string
+    router.get("/search", dbQuery.searchItems);
+
     app.use("/db", router);
 };
 

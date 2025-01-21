@@ -82,3 +82,4 @@ exports.updateDatabase = asyncHandler(async (req, res) => {
         res.status(200).send({ message: "Market Data has been added to the Database successfully."});
     });
 });
+
