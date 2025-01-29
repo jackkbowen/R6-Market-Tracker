@@ -1,17 +1,61 @@
+import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import datetime as dt
+import matplotlib.dates as mdates
 import json
 
 # Load data from the data dump JSON file
 with open("./assets/local.marketplaceitems.json", 'r') as dataFile:
     data = json.load(dataFile)
 
-# Creating a DataFrame from the data
-df = pd.DataFrame(data)
-df.dropna(inplace=True)
+# Ensure the output folder exists
+output_folder = "./assets/graphs"
+os.makedirs(output_folder, exist_ok=True)
 
-soldData = [df['sold']]
+# Create a dictionary to store prices and dates for each item
+item_sales_data = {}
 
-print (soldData)
+for item in data:
+    item_id = item.get("id")
+    item_name = item.get("name")
+    sold_data = item.get("sold", [])
+    
+    # Extract prices and dates
+    prices_dates = [(entry[0], entry[1][:10]) for entry in sold_data] 
+    item_sales_data[item_id] = prices_dates
+
+# Plot and save separate graphs for each item
+for item_id, sales in item_sales_data.items():
+    if not sales:
+        continue
+
+    # Create a DataFrame to handle grouping and averaging
+    df_sales = pd.DataFrame(sales, columns=["price", "date"])
+    df_sales["date"] = pd.to_datetime(df_sales["date"])
+    
+    # Average prices for each valid day
+    df_avg_sales = df_sales.groupby("date", as_index=False)["price"].mean()
+
+    # Plot the averaged data
+    plt.figure(figsize=(14, 7))
+    plt.plot(df_avg_sales["date"], df_avg_sales["price"], marker='o', label=f"Item Name: {item_name}")
+
+    # Format x-axis ticks and labels
+    plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=10))
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+
+    plt.title(f"Averaged Sales Trends for Item ID: {item_id}")
+    plt.xlabel("Date")
+    plt.ylabel("Average Price")
+    plt.legend()
+    plt.xticks(rotation=45)
+    plt.grid(True)
+    plt.tight_layout()
+
+    # Save plot to the folder
+    plot_path = os.path.join(output_folder, f"{item_id}.png")
+    plt.savefig(plot_path)
+    plt.close()
+
+print(f"All plots have been saved in {output_folder}")
