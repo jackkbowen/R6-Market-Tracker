@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import json
+from matplotlib.dates import date2num
 
 # Load data from the data dump JSON file
 with open("./assets/local.marketplaceitems.json", 'r') as dataFile:
@@ -22,7 +23,7 @@ for item in data:
     sold_data = item.get("sold", [])
     
     # Extract prices and dates
-    prices_dates = [(entry[0], entry[1][:10]) for entry in sold_data] 
+    prices_dates = [(entry[0], entry[1][:10]) for entry in sold_data]
     item_sales_data[item_id] = prices_dates
 
 # Plot and save separate graphs for each item
@@ -33,13 +34,21 @@ for item_id, sales in item_sales_data.items():
     # Create a DataFrame to handle grouping and averaging
     df_sales = pd.DataFrame(sales, columns=["price", "date"])
     df_sales["date"] = pd.to_datetime(df_sales["date"])
-    
+
     # Average prices for each valid day
     df_avg_sales = df_sales.groupby("date", as_index=False)["price"].mean()
 
-    # Plot the averaged data
+    # Convert dates to numeric format only for regression
+    numeric_dates = date2num(df_avg_sales["date"])
+
+    # Perform regression
+    reg = np.polyfit(numeric_dates, df_avg_sales["price"], 1)
+    trend = np.poly1d(reg)
+
+    # Plot the results using datetime objects
     plt.figure(figsize=(14, 7))
     plt.plot(df_avg_sales["date"], df_avg_sales["price"], marker='o', label=f"Item Name: {item_name}")
+    plt.plot(df_avg_sales["date"], trend(numeric_dates), label="Trend Line", color='red')
 
     # Format x-axis ticks and labels
     plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=10))
