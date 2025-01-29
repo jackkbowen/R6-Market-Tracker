@@ -17,6 +17,7 @@ os.makedirs(output_folder, exist_ok=True)
 # Create a dictionary to store prices and dates for each item
 item_sales_data = {}
 
+# Loop through the data to extract prices and dates
 for item in data:
     item_id = item.get("id")
     item_name = item.get("name")
@@ -51,12 +52,13 @@ for item_id, sales in item_sales_data.items():
     plt.plot(df_avg_sales["date"], trend(numeric_dates), label="Trend Line", color='red')
 
     # Format x-axis ticks and labels
-    plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=10))
+    plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=5))
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
 
+    # Format the grid and adding labels
     plt.title(f"Averaged Sales Trends for Item ID: {item_id}")
     plt.xlabel("Date")
-    plt.ylabel("Average Price")
+    plt.ylabel("Price")
     plt.legend()
     plt.xticks(rotation=45)
     plt.grid(True)
