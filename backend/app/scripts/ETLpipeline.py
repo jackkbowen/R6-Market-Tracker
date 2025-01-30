@@ -5,6 +5,8 @@ import pymongo
 from pymongo import MongoClient, UpdateOne
 import json
 import re
+import os
+
 
 #  Needed when I move to postgres
 # import psycopg2
@@ -139,10 +141,11 @@ cursor = conn.cursor()
 
 
 # Connect to MongoDB 
-client = MongoClient('mongodb://localhost:27017/')  # Replace with your MongoDB connection string
+client = MongoClient("mongodb+srv://admin:admin@peripha.uidveld.mongodb.net/R6Market?retryWrites=true&w=majority")
+
 
 # Database and collection for the insert operation
-db = client['local'] 
+db = client['R6Market'] 
 collection = db['marketplaceItems'] 
 
 # Need to clean up the data before inserting into the database
@@ -153,6 +156,7 @@ collection = db['marketplaceItems']
 # Update all fields except 'sold'
 # Append new sold data without duplicates using $addToSet and $each
 # Insert if the document doesn't exist
+
 
 try:
     # Perform the bulk write operation
