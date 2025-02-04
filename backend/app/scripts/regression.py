@@ -1,18 +1,24 @@
-import os
+import os 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import json
 from matplotlib.dates import date2num
+from pymongo import UpdateOne, MongoClient
+import pymongo
+from io import BytesIO
+import gridfs
+
+# MongoDB setup
+client = MongoClient("mongodb+srv://admin:admin@peripha.uidveld.mongodb.net/R6Market?retryWrites=true&w=majority")  # Update with the correct connection string
+db = client['R6Market']  # Update with your DB name
+collection = db['marketplaceItems   ']  # Update with your collection name
+fs = gridfs.GridFS(db)
 
 # Load data from the data dump JSON file
-with open("./assets/local.marketplaceitems.json", 'r') as dataFile:
+with open("../backend/app/scripts/assets/local.marketplaceitems.json", 'r') as dataFile:
     data = json.load(dataFile)
-
-# Ensure the output folder exists
-output_folder = "./assets/graphs"
-os.makedirs(output_folder, exist_ok=True)
 
 # Create a dictionary to store prices and dates for each item
 item_sales_data = {}
@@ -22,10 +28,13 @@ for item in data:
     item_id = item.get("id")
     item_name = item.get("name")
     sold_data = item.get("sold", [])
-    
+
     # Extract prices and dates
     prices_dates = [(entry[0], entry[1][:10]) for entry in sold_data]
     item_sales_data[item_id] = prices_dates
+
+# List to store bulk update operations
+bulk_operations = []
 
 # Plot and save separate graphs for each item
 for item_id, sales in item_sales_data.items():
@@ -64,9 +73,31 @@ for item_id, sales in item_sales_data.items():
     plt.grid(True)
     plt.tight_layout()
 
-    # Save plot to the folder
-    plot_path = os.path.join(output_folder, f"{item_id}.png")
-    plt.savefig(plot_path)
+    # Save plot to an in-memory buffer
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
     plt.close()
+    buffer.seek(0)
 
-print(f"All plots have been saved in {output_folder}")
+    # Store the image in GridFS and get the file ID
+    file_id = fs.put(buffer, filename=f"graph_{item_id}.png")
+
+    # Append the bulk update operation for MongoDB
+    bulk_operations.append(
+        UpdateOne(
+            {'itemID': item_id},
+            {
+                '$set': {'graphImageFileID': file_id},
+                '$addToSet': {'sold': {'$each': [list(entry) for entry in sales]}}
+            },
+            upsert=True
+        )
+    )
+
+# Execute bulk operations
+try:
+    if bulk_operations:
+        collection.bulk_write(bulk_operations)
+        print("Database successfully updated with graph images stored in GridFS.")
+except pymongo.errors.BulkWriteError as e:
+    print("Bulk write error:", e.details)

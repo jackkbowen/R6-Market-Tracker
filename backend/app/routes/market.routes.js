@@ -19,6 +19,9 @@ module.exports = (app) => {
     // TODO Should always be called after scanMarket. Need to find a way to run both in one call and have the server not crash, maybe just nodemon issue
     router.get("/updateDatabase", marketplaceItem.updateDatabase);
 
+    // Calls the regression script to create graphs
+    router.get("/createGraphs", marketplaceItem.createGraphs);
+
 
     app.use("/market", router);
 };

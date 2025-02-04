@@ -83,3 +83,19 @@ exports.updateDatabase = asyncHandler(async (req, res) => {
     });
 });
 
+exports.createGraphs = asyncHandler(async (req, res) => {
+    
+    exec("python ../backend/app/scripts/regression.py", (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            res.status(500).send({ message: "Error executing script" });
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            res.status(500).send({ message: "Script execution error" });
+        }
+        console.log(`stdout: ${stdout}`);
+        res.status(200).send({ message: "Graphs have been created successfully."});
+    });
+});
+
