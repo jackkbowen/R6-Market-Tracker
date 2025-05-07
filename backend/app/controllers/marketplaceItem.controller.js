@@ -69,7 +69,7 @@ exports.scanMarket = asyncHandler(async (req, res) => {
 
 exports.updateDatabase = asyncHandler(async (req, res) => {
     
-    exec("python ../backend/app/scripts/ETLpipeline.py", (error, stdout, stderr) => {
+    exec("python ../backend/app/scripts/ETLpipelineFirestore.py", (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
             res.status(500).send({ message: "Error executing script" });
