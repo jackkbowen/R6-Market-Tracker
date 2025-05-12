@@ -2,13 +2,44 @@
 ![alt text](https://raw.githubusercontent.com/jackkbowen/R6-Market-Tracker/refs/heads/main/SiegeData1.png)
 ![alt text](https://raw.githubusercontent.com/jackkbowen/R6-Market-Tracker/refs/heads/main/SiegeData2.png)
 
-## ✅ To-do list
+# ✅ Project To-Do List (Generalized)
 
-- making up/down arrows have a limit of 1 visible at a time. ~~need to make all buttons uniform size to keep  layout from moving around?~~  
-- ~~work more with regex and extracting the tags to get data points I can use to filter the data~~  
-- ~~BIG! Work on CRUD from the backend~~  
-- ~~Maybe stagger multiple scripts to scrape more item prices? Might need more ubi accounts to do so. or have the ids file # specified when executing the script with cron schedules~~  
-- Once filtering works, button sends request based on status of filter. replaces default landing page content component with the search results component? Would be a cool seamless effect  
+## 1. Create an Item Information Page
+- [ ] Design and layout the item details page
+- [ ] Implement dynamic routing for individual items
+- [ ] Connect to backend to fetch and display item data
+- [ ] Add interactive elements (images, charts, related items)
+- [ ] Integrate user-specific actions (favorites, tracking)
+- [ ] Ensure mobile responsiveness and UI polish
+
+## 2. Generate and Host Charts in S3
+- [ ] Set up backend chart generation process
+- [ ] Store generated charts as images
+- [ ] Configure S3 bucket for hosting chart images
+- [ ] Integrate S3-hosted charts into frontend display
+- [ ] Manage access and permissions for hosted assets
+
+## 3. Develop Account and Tracking System
+- [ ] Design user account structure and data storage
+- [ ] Implement authentication and login functionality
+- [ ] Create user dashboard for favorites and price tracking
+- [ ] Build backend endpoints for user interactions
+- [ ] Add notifications for tracked items and price changes
+- [ ] Secure the system and handle user data responsibly
+
+## 4. Implement Item Filtering and Search Page
+- [ ] Design filtering UI and search functionality
+- [ ] Develop backend filtering and search logic
+- [ ] Connect filters to search results dynamically
+- [ ] Ensure smooth navigation from landing page to search page
+- [ ] Optimize performance for large datasets
+
+## 5. Seamlessly Update Landing Page with Filter Results
+- [ ] Detect and manage active filter states on the frontend
+- [ ] Dynamically update landing page content with filtered results
+- [ ] Implement smooth transitions and animations for UX
+- [ ] Handle edge cases (loading, no results, responsiveness)
+- [ ] Optimize frontend performance for dynamic content swaps
 
 ---
 
