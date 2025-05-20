@@ -3,23 +3,14 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 import time
-from urllib import parse
 import aiohttp
 import base64
 import time
 import json
-import copy
 import contextlib
 import os
 import asyncio
-import discord
-import websockets
-from discord.ext import commands, tasks
 from os.path import exists
-
-import matplotlib.pyplot as plt
-import numpy as np
-from math import sin, cos, radians
 
 class FailedToConnect(Exception):
     pass

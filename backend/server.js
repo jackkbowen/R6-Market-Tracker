@@ -25,8 +25,6 @@ console.log(`DB_URL: ${process.env.DB_URI}`);
 const db = require("./app/db");
 db.mongoose
   .connect(process.env.DB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
   })
   .then(() => {
     console.log("Connected to the database!");
@@ -40,6 +38,13 @@ db.mongoose
 // ---------------------------------------------------------
 // ROUTES
 // ---------------------------------------------------------
+
+// Landing page route
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to R6 Market Backend."});
+});
+
+// Exposing backend api routes
 require("./app/routes/market.routes")(app);
 require("./app/routes/db.routes")(app);
 

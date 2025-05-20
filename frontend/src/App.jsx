@@ -4,8 +4,8 @@ import './App.css'
 
 import NavBar from './components/NavBar/NavBar.jsx'
 import LandingPage from './components/LandingPage/LandingPage.jsx';
-import ErrorPage from './components/ErrorPage.jsx';
 import Search from './components/Search/Search.jsx';
+import NotFound from './components/NotFound.jsx';
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
             <Route path="about" />
             <Route path="contact" />
             <Route path="search/:searchQuery" element={<Search />} />
-            <Route path="*" element={<ErrorPage />} />
+            <Route path="*" element={<NotFound />} />
           
       </Routes>
     </div>
